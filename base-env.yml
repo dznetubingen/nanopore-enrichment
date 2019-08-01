@@ -1,0 +1,24 @@
+name: base-env
+channels:
+  - bioconda
+  - conda-forge
+  - r
+  - sagrudd
+dependencies:
+  - snakemake-minimal
+  - python
+  - samtools
+  - minimap2
+  - seqtk
+  - r
+  - r-writexl
+  - rstudio
+  - graphviz
+  - imagemagick
+  - ont_tutorial_cas9
+  - pandas
+  - openjdk =10.0.2 # Module java.xml.bind deprecated in latest versions; dependency for IGV
+  - igv =2.4.9  # version 2.4.16 places igv.jar into wrong directory
+  - multiqc=1.7
+  - fastqc=0.11.8
+#  - gnuplot=5.2.6

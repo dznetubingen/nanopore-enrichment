@@ -86,6 +86,12 @@ summary['offtarget_level']        = params.offtarget_level
 log.info summary.collect { k,v -> "${k.padRight(15)}: $v" }.join("\n")
 log.info "========================================="
 
+
+//if [ ! -d "$PWD/RawData" ]; then
+//  mkdir $PWD/RawData
+//fi
+
+
 process copy_reads {
       publishDir "$PWD/RawData", mode: 'copy'
 
@@ -97,10 +103,6 @@ process copy_reads {
 
       script:
       """
-      if [ ! -d "$PWD/RawData" ]; then
-        mkdir $PWD/RawData
-      fi
-
       cp $reads $PWD/RawData/
       """
 }
@@ -116,10 +118,6 @@ process copy_reference {
 
       script:
       """
-      if [ ! -d "$PWD/ReferenceData" ]; then
-        mkdir $PWD/ReferenceData
-      fi
-
       cp $reference $PWD/ReferenceData/
       """
 }
@@ -135,10 +133,6 @@ process copy_targets {
 
       script:
       """
-      if [ ! -d "$PWD/RawData" ]; then
-        mkdir $PWD/RawData
-      fi
-
       cp $targets $PWD/RawData/
       """
 }

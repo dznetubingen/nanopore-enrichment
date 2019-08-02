@@ -92,58 +92,31 @@ log.info "========================================="
 //fi
 
 
-process copy_reads {
-      publishDir "$PWD/RawData", mode: 'copy'
-
+process copy_data {
       input:
       file reads from ch_reads_copy
-
-      output:
-      //file "*" into ch_reads_copied
-
-      script:
-      """
-      cp $reads $PWD/RawData/
-      """
-}
-
-process copy_reference {
-      publishDir "$PWD/ReferenceData", mode: 'copy'
-
-      input:
       file reference from ch_reference_copy
-
-      output:
-      //file "*" into ch_reference_copied
-
-      script:
-      """
-      cp $reference $PWD/ReferenceData/
-      """
-}
-
-process copy_targets {
-      publishDir "$PWD/RawData", mode: 'copy'
-
-      input:
       file targets from ch_targets_copy
 
-      output:
-      //file "*" into ch_targets_copied
-
       script:
       """
-      cp $targets $PWD/RawData/
+      #!/usr/bin/env python
+      import sys
+      import os
+
+      os.system("cp $targets $PWD/RawData/")
+      os.system("cp $reads $PWD/RawData/")
+      os.system("cp $reference $PWD/ReferenceData/")
       """
 }
 
-process copy_Rscript {
-  publishDir "$PWD", mode: 'copy'
+
+/*process copy_Rscript {
   script:
   """
   cp ${workflow.projectDir}/harvest.R $PWD/harvest.R
   """
-}
+}*/
 
 
 process minimap_index {

@@ -137,6 +137,14 @@ process copy_targets {
       """
 }
 
+process copy_Rscript {
+  publishDir "$PWD", mode: 'copy'
+  script:
+  """
+  cp ${workflow.projectDir}/harvest.R $PWD/harvest.R
+  """
+}
+
 
 process minimap_index {
       publishDir "$PWD/ReferenceData", mode: 'copy'
@@ -251,7 +259,7 @@ process Rpreprocess {
 
       script:
       """
-      Rscript ${workflow.projectDir}/harvest.R $targets ${custom_runName} $reference $gstride $target_proximity $offtarget_level 16 $PWD
+      Rscript $PWD/harvest.R $targets ${custom_runName} $reference $gstride $target_proximity $offtarget_level 16 $PWD
       chmod -R 777 $PWD/Analysis/OffTarget
       chmod -R 777 $PWD/Analysis/OnTarget
       """

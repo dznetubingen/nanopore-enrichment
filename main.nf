@@ -104,6 +104,12 @@ process copy_data {
       import sys
       import os
 
+      if not os.path.isdir('$PWD/RawData/'):
+        os.system("mkdir $PWD/RawData/")
+
+      if not os.path.isdir('$PWD/ReferenceData/'):
+        os.system("mkdir $PWD/ReferenceData/")
+
       os.system("cp $targets $PWD/RawData/")
       os.system("cp $reads $PWD/RawData/")
       os.system("cp $reference $PWD/ReferenceData/")

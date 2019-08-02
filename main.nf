@@ -113,6 +113,8 @@ process copy_data {
       os.system("cp $targets $PWD/RawData/")
       os.system("cp $reads $PWD/RawData/")
       os.system("cp $reference $PWD/ReferenceData/")
+
+      os.system("cp ${workflow.projectDir}/harvest.R $PWD/harvest.R")
       """
 }
 

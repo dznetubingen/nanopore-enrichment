@@ -87,7 +87,7 @@ log.info summary.collect { k,v -> "${k.padRight(15)}: $v" }.join("\n")
 log.info "========================================="
 
 process copy_reads {
-      publishDir "${workflow.projectDir}/RawData", mode: 'copy'
+      publishDir "$PWD/RawData", mode: 'copy'
 
       input:
       file reads from ch_reads_copy
@@ -97,16 +97,16 @@ process copy_reads {
 
       script:
       """
-      if [ ! -d "${workflow.projectDir}/RawData" ]; then
-        mkdir ${workflow.projectDir}/RawData
+      if [ ! -d "$PWD/RawData" ]; then
+        mkdir $PWD/RawData
       fi
 
-      cp $reads ${workflow.projectDir}/RawData/
+      cp $reads $PWD/RawData/
       """
 }
 
 process copy_reference {
-      publishDir "${workflow.projectDir}/ReferenceData", mode: 'copy'
+      publishDir "$PWD/ReferenceData", mode: 'copy'
 
       input:
       file reference from ch_reference_copy
@@ -116,16 +116,16 @@ process copy_reference {
 
       script:
       """
-      if [ ! -d "${workflow.projectDir}/ReferenceData" ]; then
-        mkdir ${workflow.projectDir}/ReferenceData
+      if [ ! -d "$PWD/ReferenceData" ]; then
+        mkdir $PWD/ReferenceData
       fi
 
-      cp $reference ${workflow.projectDir}/ReferenceData/
+      cp $reference $PWD/ReferenceData/
       """
 }
 
 process copy_targets {
-      publishDir "${workflow.projectDir}/RawData", mode: 'copy'
+      publishDir "$PWD/RawData", mode: 'copy'
 
       input:
       file targets from ch_targets_copy
@@ -135,17 +135,17 @@ process copy_targets {
 
       script:
       """
-      if [ ! -d "${workflow.projectDir}/RawData" ]; then
-        mkdir ${workflow.projectDir}/RawData
+      if [ ! -d "$PWD/RawData" ]; then
+        mkdir $PWD/RawData
       fi
-      
-      cp $targets ${workflow.projectDir}/RawData/
+
+      cp $targets $PWD/RawData/
       """
 }
 
 
 process minimap_index {
-      publishDir "${workflow.projectDir}/ReferenceData", mode: 'copy'
+      publishDir "$PWD/ReferenceData", mode: 'copy'
 
       input:
       file reference from ch_reference_minimap
@@ -176,7 +176,7 @@ process minimap_run {
 }
 
 process samtools_view {
-      publishDir "${workflow.projectDir}/Analysis/Minimap2", mode: 'copy', pattern: '*unmapped*'
+      publishDir "$PWD/Analysis/Minimap2", mode: 'copy', pattern: '*unmapped*'
 
       input:
       file samfile from ch_minimap2_sam
@@ -192,7 +192,7 @@ process samtools_view {
 }
 
 process samtools_sort {
-      publishDir "${workflow.projectDir}/Analysis/Minimap2", mode: 'copy'
+      publishDir "$PWD/Analysis/Minimap2", mode: 'copy'
 
       input:
       file bamfile from ch_samtools_view_bam_mapped
@@ -207,7 +207,7 @@ process samtools_sort {
 }
 
 process samtools_index {
-      publishDir "${workflow.projectDir}/Analysis/Minimap2", mode: 'copy'
+      publishDir "$PWD/Analysis/Minimap2", mode: 'copy'
 
       input:
       file bamfile_sorted from ch_samtools_sort_bam
@@ -223,7 +223,7 @@ process samtools_index {
 
 // render quality values from unmapped reads
 process samtools_view_unmapped {
-      publishDir "${workflow.projectDir}/Analysis/Minimap2", mode: 'copy'
+      publishDir "$PWD/Analysis/Minimap2", mode: 'copy'
 
       input:
       file unmapped_bamfile from ch_samtools_view_bam_unmapped
@@ -241,7 +241,7 @@ process samtools_view_unmapped {
 
 // perform the R preprocess
 process Rpreprocess {
-      publishDir "${workflow.projectDir}/Analysis/R", mode: 'copy'
+      publishDir "$PWD/Analysis/R", mode: 'copy'
 
       input:
       file targets from ch_targets_R
@@ -257,15 +257,15 @@ process Rpreprocess {
 
       script:
       """
-      Rscript ${workflow.projectDir}/harvest.R $targets ${custom_runName} $reference $gstride $target_proximity $offtarget_level 16 ${workflow.projectDir}
-      chmod -R 777 ${workflow.projectDir}/Analysis/OffTarget
-      chmod -R 777 ${workflow.projectDir}/Analysis/OnTarget
+      Rscript $PWD/harvest.R $targets ${custom_runName} $reference $gstride $target_proximity $offtarget_level 16 $PWD
+      chmod -R 777 $PWD/Analysis/OffTarget
+      chmod -R 777 $PWD/Analysis/OnTarget
       """
 }
 
 process onTargetReadDump{
-      publishDir "${workflow.projectDir}/Analysis/OnTarget", mode: 'copy'
-      params.onTarget = "${workflow.projectDir}/Analysis/OnTarget/${custom_runName}.OnTarget.mappedreads"
+      publishDir "$PWD/Analysis/OnTarget", mode: 'copy'
+      params.onTarget = "$PWD/Analysis/OnTarget/${custom_runName}.OnTarget.mappedreads"
       ch_R_onTarget = Channel.fromPath(params.onTarget)
 
       input:
@@ -284,8 +284,8 @@ process onTargetReadDump{
 }
 
 process offTargetReadDump{
-      publishDir "${workflow.projectDir}/Analysis/OffTarget", mode: 'copy'
-      params.offTarget = "${workflow.projectDir}/Analysis/OffTarget/${custom_runName}.OffTarget.mappedreads"
+      publishDir "$PWD/Analysis/OffTarget", mode: 'copy'
+      params.offTarget = "$PWD/Analysis/OffTarget/${custom_runName}.OffTarget.mappedreads"
       ch_R_offTarget = Channel.fromPath(params.offTarget)
 
       input:

@@ -199,10 +199,12 @@ process samtools_index {
 
       output:
       file "*bai*" into ch_samtools_index
+      file "delay_file.txt" into ch_delay
 
       script:
       """
       samtools index -@ 15 $bamfile_sorted
+      touch delay_file.txt
       """
 }
 
@@ -212,15 +214,16 @@ process samtools_view_unmapped {
 
       input:
       file unmapped_bamfile from ch_samtools_view_bam_unmapped
+      file "delay_file.txt" from ch_delay
 
       output:
       file "${custom_runName}.unmapped.quals" into ch_samtools_view_qual_unmapped
-      file "delay_file.txt" into ch_delay
+      file "delay_file.txt" into ch_delay_2
 
       script:
       """
       samtools view -@ 5 -O sam $unmapped_bamfile | awk '{{print \$11}}' > ${custom_runName}.unmapped.quals
-      touch delay_file.txt
+
       """
 }
 
@@ -232,13 +235,13 @@ process Rpreprocess {
       file targets from ch_targets_R
       file reference from ch_reference_R
 
-      file "delay_file.txt" from ch_delay
+      file "delay_file.txt" from ch_delay_2
 
       output:
       //file "*OnTarget.mappedreads" into ch_R_onTarget
       //file "*OffTarget.mappedreads" into ch_R_offTarget
 
-      file "delay_file.txt" into ch_delay_1, ch_delay_2
+      file "delay_file.txt" into ch_delay_3, ch_delay_4
 
       script:
       """
@@ -257,7 +260,7 @@ process onTargetReadDump{
       file allReads from ch_onTargetReadDump
       file onTargetReads from ch_R_onTarget
 
-      file "delay_file.txt" from ch_delay_1
+      file "delay_file.txt" from ch_delay_3
 
       output:
       file "${custom_runName}.OnTarget.fastq" into ch_onTargetReadDump_fastq
@@ -277,7 +280,7 @@ process offTargetReadDump{
       file allReads from ch_offTargetReadDump
       file offTargetReads from ch_R_offTarget
 
-      file "delay_file.txt" from ch_delay_2
+      file "delay_file.txt" from ch_delay_4
 
       output:
       file "${custom_runName}.OffTarget.fastq" into ch_offTargetReadDump_fastq

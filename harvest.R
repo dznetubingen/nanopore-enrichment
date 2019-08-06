@@ -1,12 +1,8 @@
-#if (!requireNamespace("BiocManager", quietly = TRUE))
-#    install.packages("BiocManager")
 
-#BiocManager::install("pbmcapply")
-#BiocManager::install("dplyr")
-#BiocManager::install("GenomicRanges")
 
 library(yaml)
 library(parallel)
+
 library(pbmcapply)
 library(dplyr)
 library(GenomicRanges)

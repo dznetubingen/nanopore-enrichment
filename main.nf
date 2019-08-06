@@ -245,8 +245,6 @@ process Rpreprocess {
 
       script:
       """
-      chmod -R 777 /opt/conda/envs/base-env
-
       Rscript $PWD/harvest.R $PWD/RawData/$targets ${custom_runName} $PWD/ReferenceData/$reference $gstride $target_proximity $offtarget_level 16 $PWD
       chmod -R 777 $PWD/Analysis/OffTarget
       chmod -R 777 $PWD/Analysis/OnTarget

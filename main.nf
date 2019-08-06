@@ -40,7 +40,9 @@ if( !(workflow.runName ==~ /[a-z]+_[a-z]+/) ){
   custom_runName = workflow.runName
 }
 
-print(params.name)
+if(params.name == null){
+  custom_runName = workflow.runName
+}
 
 gstride = params.gstride
 target_proximity = params.target_proximity

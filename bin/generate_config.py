@@ -29,7 +29,7 @@ pipeline: "Nanopore Cas9 Enrichment"
 
 study_name: "{study}"
 
-reference_genome: "{fastq}"
+reference_genome: "{reference}"
 
 target_regions: "{targets}"
 
@@ -46,6 +46,6 @@ threads: {threads}
 tutorialText: TRUE
 """
 
-f = open("config.yml", "w")
+f = open("config.yaml", "w")
 f.write(config)
 f.close()

@@ -1,0 +1,21 @@
+
+
+pipeline: "Nanopore Cas9 Enrichment"
+
+study_name: "study"
+
+reference_genome: "fastq"
+
+target_regions: "targets"
+
+fastq: "fastq"
+
+gstride: 100
+
+target_proximity: 10000
+
+offtarget_level: 20
+
+threads: 8
+
+tutorialText: TRUE

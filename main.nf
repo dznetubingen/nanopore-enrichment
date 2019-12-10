@@ -106,10 +106,29 @@ process run_pipeline{
 
       cp  ${workflow.projectDir}/bin/* .
 
+      cp -r ${workflow.projectDir}/assets .
+
       snakemake -j ${params.threads} all
       """
 }
 
+
+process render_report{
+      publishDir "results", mode: 'copy'
+      errorStrategy 'ignore'
+
+      input:
+      file '*' from output_ch
+
+      output:
+      file '*report*' into report_ch
+
+      script:
+      """
+      R --slave -e 'rmarkdown::render("cas9_enrichment_report.Rmd", "html_document")'
+      """
+
+}
 
 
 workflow.onComplete {

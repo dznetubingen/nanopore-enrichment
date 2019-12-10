@@ -8,7 +8,7 @@ output:
     self_contained: yes
     theme: default
     highlight: null
-    css: Static/ont_tutorial.css
+    css: assets/ont_tutorial.css
     toc: yes
     toc_depth: 2
     toc_float:
@@ -16,15 +16,9 @@ output:
       smooth_scroll: yes
     df_print: paged
 link-citations: yes
-bibliography: Static/Bibliography.bib
+bibliography: assets/Bibliography.bib
 always_allow_html: yes
 ---
-
-<div style="position:absolute;top:0px;right:0px;padding:15px;background-color:gray;width:45%;">
-```{r, echo=FALSE}
-knitr::include_graphics("https://nanoporetech.com/themes/custom/nanopore/images/ont-logo.svg?tutorial=cas9enrichment")
-```
-</div>
 
 
 ```{r setup, include=FALSE}
@@ -81,8 +75,6 @@ colMax <- 4
 #knitr::knit_exit()
 ```
 
-
-`r slurpContent("Static/TutorialPreamble.md")`
 
 ```{r, echo=FALSE}
 r_results <- file.path("Analysis","R")
@@ -361,9 +353,9 @@ write_xlsx(as.data.frame(ontargetUniverse)[,c(1,2,3,4,6,8,14,16,23)],
 The tables presented in the previous two sections have provided a summary of general mapping characteristics and on-target statistics. Plotting depth of coverage across the target regions also allows for an assessment of the performance of the crRNA guide used. The plots in this section review the depth of coverage, strandedness of mapping and leakiness of sequence coverage beyond the boundaries of the target region.
 
 
-```{r, warning=FALSE}
-singlePlot("HTT", aggregatedGR)
-```
+#```{r, warning=FALSE}
+#singlePlot("HTT", aggregatedGR)
+#```
 
 The figure above shows the depth-of-coverage around a target region. The on-target region is located within the vertical red-bars and is flanked by the target-proximal regions. The horizontal bar shows the threshold at which an off-target feature would be defined. This plot is for the **`HTT`** target used in this tutorial.
 
@@ -394,9 +386,9 @@ strandedPlot <- function(geneName, covData, delta=0) {
 ```
 
 
-```{r, warning=FALSE}
-strandedPlot("HTT", aggregatedGR)
-```
+#```{r, warning=FALSE}
+#strandedPlot("HTT", aggregatedGR)
+#```
 
 The figure above presents the depth of coverage but is shaded by the strand (forward or reverse) to which the reads are mapped. This figure can be used to observe deviations from the expected 50:50 distribution of mapping between the + and - strands. Sequences that extend from the target regions and into the target-proximal regions may indicate suboptimal performance of a crRNA guide sequence.
 
@@ -507,62 +499,7 @@ write_xlsx(as.data.frame(offtargetUniverse)[,c(1,2,3,4,6,8,14,16,23)],
 ```
 
 
-**The output files prepared from the off-target analysis include**
-
-* The list of off-target read Ids can be found in the file **` `r file.path("Analysis","OffTarget",paste0(study,".OffTarget.mappedreads"))``**
-* The **`fastq`** sequence file containing the raw sequence reads corresponding to these Ids can be found in the file **` `r file.path("Analysis","OffTarget",paste0(study,".OffTarget.fastq"))` `**
-* The coordinate information for the off-target regions can be found in the file **` `r offtarget.meta` `**
-
-
-# Read Mapping Visualisation using IGV
-
-The Integrative Genomics Viewer (**`IGV`**) is a tool (@10.1093/bib/bbs017, @Robinsone31), that has been installed by **`conda`**, for the visualisation of genomics data. The software provides functionality for the display of sequence mapping data from BAM files that can subsequently be overlaid with "tracks" of information that can include depth-of-coverage for mapping data and gene annotations. 
-
-![](Static/Images/Cas9-IGV.PNG)
-
-The figure above presents a screenshot from the **`IGV`** software. The coordinates for an off-target region have been selected (see the top bar of the figure for the coordinates) and the display has been zoomed-in so that the quality and mapping strand can be observed.
-
-**`IGV`** can be started from the command line by using the command `igv`.
-
-In this tutorial we recommend that you instead encourage **`IGV`** to display sequence information around a target of interest. During the analysis presented in this tutorial, we have been reviewing the enrichment of sequences around the **`HTT`** gene.
-
-We would like to explore the read mapping information around this gene. The command below will open the **`IGV`** browser to the appropriate genome coordinates - in this example we are using the feature with coordinates `[Chr 4] Start=3072436, Stop=3079444` - this corresponds to the **`HTT`** gene.
-
-
-```
-igv -g ./ReferenceData/Homo_sapiens.GRCh38.dna.chromosome.4.fa \
-./Analysis/Minimap2/cas9_FAK76554.bam,./RawData/enrichment_targets.bed \
-4:49091201-49156600
-```
-
-** please note that if you are using your own reference genome and BED file that the parameters above may require modifications **
-
-
-# Reproducible research - produce your own report
-
-This report has been created using **`Rmarkdown`**, publicly available **`R`** packages, and the \LaTeX document typesetting software for reproducibility. For clarity the **`R`** packages used, and their versions, are listed below.
-
-\fontsize{8}{12}
 
 ```{r sessionInfo, eval=TRUE, echo=FALSE, comment=NA}
 utils:::print.sessionInfo(sessionInfo()[-7], locale=FALSE)
 ```
-
-\fontsize{10}{14}
-
-It is also worth recording the versions of the software that have been used for the analysis.
-
-\fontsize{8}{12}
-
-```{r, engine='bash', echo=FALSE, comment=NA}
-conda list "samtools|minimap2|snakemake|rstudio|seqtk|igv"
-```
-
-\fontsize{10}{14}
-
-`r slurpContent("Static/TutorialPostamble.md")`
-
-\pagebreak
-
-
-# References and citations

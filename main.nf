@@ -114,18 +114,19 @@ process run_pipeline{
 
 
 process render_report{
-      publishDir "results", mode: 'copy'
+      publishDir "results/report", mode: 'copy'
       errorStrategy 'ignore'
 
       input:
       file '*' from output_ch
 
       output:
-      file '*report*' into report_ch
+      file "*.html" into report_ch
 
       script:
       """
       R --slave -e 'rmarkdown::render("cas9_enrichment_report.Rmd", "html_document")'
+      mv cas9_enrichment_report.html cas9_enrichment_report_${params.study}.html
       """
 
 }

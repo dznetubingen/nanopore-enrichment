@@ -6,7 +6,7 @@ Pipeline for analysis of enrichment experiments using the Cas9-Nanopore protocol
 ## Enrichment QC Pipeline
 A standard pipeline call can be executed like this:
 ```
-nextflow run dznetubingen/nanopore-enrichment --fastq all_pass_20191017_STCL49_Cas9_Probes1345.fastq --resources Homo_sapiens.GRCh38.dna.primary_assembly.fa --targets targets.bed --study study_id --threads 6 -profile standard
+nextflow run dznetubingen/nanopore-enrichment --fastq all_pass_20191017_STCL49_Cas9_Probes1345.fastq --reference Homo_sapiens.GRCh38.dna.primary_assembly.fa --targets targets.bed --study study_id --threads 6 -profile standard
 ```
 
 The pipeline requires the following parameters:
@@ -60,7 +60,10 @@ python3 /app/scripts/STRique.py count --t 20 --algn file_name.sam sample_enrichm
 The file 'c9orf72_hg38_config_noChr.tsv' specifies the repeat to look for. It can be found in the 'assets' directory of this repository.
 Each repeat and its length are now contained in 'sample.strique.tsv'.
 
-
+### Analysis of STRique results
+You can visualize the results of the STRique repeat counting in histograms using the script 'generate_repeat_histogram.R' in the 'bin' directory.
+Just specify the path to the STRique results file and run the script. It will produce two histograms of repeat lengths, one for all repeats and one for repeats that
+have been filtered for small repeat lengths (default cutoff is 10, can be changed in the script).
 
 
 

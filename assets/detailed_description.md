@@ -44,6 +44,7 @@ Once the QC pipeline is finished, or the reads have been mapped to the reference
 samtools view -h -o file_name.sam file_name.bam
 ```
 
+
 Then, make sure the fast5_pass folder is available and fire up the STRique docker container:
 
 ```
@@ -52,17 +53,32 @@ docker run -ti -v /path/to/your/data:/data giesselmann/strique
 
 Now you can run the indexing like so:
 ```
-python3 /app/scripts/STRique.py index --recursive --out_prefix fast5_pass fast5_pass/ > sample_enrichment.fofn ```
+python3 /app/scripts/STRique.py index --recursive --out_prefix fast5_pass fast5_pass/ > sample_enrichment.fofn
+```
 
 And finally the repeat counting step:
 
 ```
 python3 /app/scripts/STRique.py count --t 20 --algn file_name.sam sample_enrichment.fofn /app/models/r9_4_450bps.model c9orf72_hg38_config_noChr.tsv > sample.strique.tsv 
- ```
+```
 
  ## Analysis of STRique results
  You can visualize the results of the STRique repeat counting in histograms using the script 'generate_repeat_histogram.R' in the 'bin' directory. Just specify the path to the STRique results file and run the script. It will produce two histograms of repeat lengths, one for all repeats and one for repeats that have been filtered for small repeat lengths (default cutoff is 10, can be changed in the script).
 
+
+## Run STRique without QC step
+You can also run STRique without the QC step, by simply mapping the FastQ files directory to the genome. This should be done with the minimap2 tool, which is installed in the docker image used for this pipeline. Run the docker image like this:
+
+```
+docker run -ti -v /path/to/directory:/data tristankast/cas_pipeline
+```
+
+Here, the 'path/to/directory' should be the absolute path to the directory that contains your files. Once the container is running, this directory will be named **/data**
+Then, you just map your reads to the reference genome:
+
+```
+minimap2 -ax map-ont Homo_sapiens.GRCh38.dna.primary_assembly.fa nanopore_test/all_pass.fastq > aln.sam
+```
 
 
 
